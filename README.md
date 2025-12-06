@@ -3,7 +3,7 @@
 This repository contains the working draft of a Bitcoin Improvement Proposal
 (BIP) tentatively titled **“Non-monetary UTXO Cleanup (The Cat)”**.
 
-It documents a soft-fork consensus change and new standardness rules intended to
+It documents a soft-fork consensus change and new spending rules intended to
 remove existing non-monetary UTXOs (NMUs) created by protocols such as Ordinals
 and Stamps, and to prevent similar UTXOs from being relayed or mined in the future.
 
