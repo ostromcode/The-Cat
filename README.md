@@ -21,6 +21,13 @@ and in any future pull request to the `bitcoin/bips` repository.
 
 ---
 
+## Supporting stats and charts
+
+See [`charts/`](./charts) for supporting statistics and visualizations that
+illustrate the scale and structure of inscription-related UTXOs.
+
+---
+
 ## Process note: mailing list moderation
 
 The usual first step for a BIP is to circulate a detailed proposal on the Bitcoin
