@@ -1,11 +1,11 @@
-BIP: ?
-Title: The Cat: Non-Monetary UTXO Cleanup
-Author: Claire Ostrom <ostromclairehome@gmail.com>
-Status: Draft
-Type: Standards Track
-Layer: Consensus (soft fork)
-Created: 2025-12-06
-License: CC0-1.0
+BIP: ?<br>
+Title: The Cat: Non-Monetary UTXO Cleanup<br>
+Author: Claire Ostrom <ostromclairehome@gmail.com><br>
+Status: Draft<br>
+Type: Standards Track<br>
+Layer: Consensus (soft fork)<br>
+Created: 2025-12-06<br>
+License: CC0-1.0<br>
 Discussion: https://github.com/ostromcode/TheCat
 
 ---
@@ -13,6 +13,8 @@ Discussion: https://github.com/ostromcode/TheCat
 # The Cat: Non-Monetary UTXO Cleanup
 
 This text was originally drafted as an email to the Bitcoin-dev mailing list (see README).
+
+---
 
 Given recent discussions surrounding the malincentives of spam and the perceived futility in addressing these issues, I felt it necessary to propose a working solution. For those interested, I have written a brief history of the problem; please skip to “The BIP” below if you are only interested in the proposal.
 
