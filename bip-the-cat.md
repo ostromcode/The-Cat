@@ -7,7 +7,7 @@ Type: Standards Track
 Layer: Consensus (soft fork)
 Created: 2025-12-06
 License: CC0-1.0
-Discussion: https://github.com/ostromcode/TheCat
+Discussion: https://github.com/ostromcode/The-Cat
 ```
 ---
 
