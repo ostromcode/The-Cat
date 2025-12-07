@@ -98,7 +98,7 @@ At the 926301 snapshot:
   inscription dust alone.
 
 Under The Cat, these UTXOs become permanently unspendable and may be safely
-pruned from the serialized UTXO set, recovering most of this footprint.
+removed from the serialized UTXO set, recovering most of this footprint.
 
 ---
 
