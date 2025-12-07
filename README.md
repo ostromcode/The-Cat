@@ -41,5 +41,5 @@ Bitcoin’s governance by suppressing discussion rather than allowing the commun
 to evaluate and critique the ideas on their technical merits.
 
 Because of this, this repository is being used as the primary venue for public review
-and commentary on The Cat. Feedback—supportive or critical—is welcome here via issues,
+and commentary on The Cat. Feedback, supportive or critical, is welcome here via issues,
 pull requests, or external discussion that links back to this draft.
