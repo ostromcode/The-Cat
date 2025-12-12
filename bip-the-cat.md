@@ -276,6 +276,61 @@ For the remaining UTXOs, the node computes key = canonical_encode(txid, vout) us
 
 Within the domain H_min_NMU ≤ height(u) ≤ H_snap and value(u) < VALUE_MAX_NMU, this predicate exactly matches membership in NMUSet_snap: every UTXO in NMUSet_snap is reported as NMU, and every UTXO outside NMUSet_snap is reported as non-NMU, with no false positives and no false negatives.
 
+##### 3.3.6 Reference pseudo-code
+
+The following pseudo-code illustrates the canonical outpoint encoding and membership query:
+
+```python
+def canonical_encode(txid: bytes, vout: int) -> bytes:
+    """
+    Encode an outpoint as a 36-byte key for NMU_DATA queries.
+
+    Args:
+        txid: 32-byte transaction ID (already in internal little-endian order)
+        vout: Output index (0-based)
+
+    Returns:
+        36-byte canonical encoding: txid_le || vout_le
+    """
+    assert len(txid) == 32
+    vout_le = vout.to_bytes(4, byteorder='little')
+    return txid + vout_le
+
+
+def is_nmu(utxo, H_MIN_NMU, H_SNAP, VALUE_MAX_NMU, fp_exclude, bff_query) -> bool:
+    """
+    Determine if a UTXO is classified as a Non-Monetary UTXO.
+
+    Args:
+        utxo: UTXO with .height, .value, .txid, .vout attributes
+        H_MIN_NMU: Minimum block height for NMU eligibility
+        H_SNAP: Snapshot block height
+        VALUE_MAX_NMU: Value threshold (1000 sats)
+        fp_exclude: Sorted list of 36-byte keys (false positive exclusions)
+        bff_query: Function to query the Binary Fuse Filter
+
+    Returns:
+        True if UTXO is an NMU, False otherwise
+    """
+    # Height window check
+    if utxo.height < H_MIN_NMU or utxo.height > H_SNAP:
+        return False
+
+    # Value threshold check
+    if utxo.value >= VALUE_MAX_NMU:
+        return False
+
+    # Encode outpoint
+    key = canonical_encode(utxo.txid, utxo.vout)
+
+    # Check false positive exclusion list (binary search)
+    if binary_search(fp_exclude, key):
+        return False
+
+    # Query Binary Fuse Filter
+    return bff_query(key)
+```
+
 ---
 
 ### 4. New consensus rule
@@ -365,9 +420,64 @@ If there were to be an issue with widely used binaries, it would become ubiquito
 
 ---
 
+## Reference Implementations
+
+The following resources provide reference implementations and specifications for components used in this BIP:
+
+### Binary Fuse Filter
+
+- **Paper:** "Binary Fuse Filters: Fast and Smaller Than Xor Filters" by Graf and Lemire (2022)
+  https://arxiv.org/abs/2201.01174
+
+- **Reference Implementation (C):** https://github.com/FastFilter/xor_singleheader
+  The `binaryfusefilter.h` header provides a single-file implementation of BFF-8 filters.
+
+- **Reference Implementation (Go):** https://github.com/FastFilter/xorfilter
+
+The filter query algorithm used in §3.3.3 follows the standard Binary Fuse Filter specification with 8-bit fingerprints. Implementations SHOULD use a well-tested library or carefully audit any custom implementation against the reference.
+
+### Ord and Stamps Indexers
+
+- **Ord 0.24.0:** https://github.com/ordinals/ord/tree/5d2fbbe64b362cd6c30d6901e50cbe80084761f8
+
+- **Stamps:** [version/commit to be pinned before activation]
+
+---
+
 ## Backward compatibility
 
 This proposal is a consensus-changing soft fork. Legacy nodes that do not implement The Cat will continue to accept blocks that spend NMUs as valid, while nodes that do implement The Cat will reject such blocks as invalid. As with any soft fork, activation requires clear opt-in from miners and from economic nodes. After activation, miners and other block proposers must avoid including transactions that spend NMUs, because such blocks will be rejected by upgraded nodes. Wallets and applications that track inscriptions, BRC-20 assets, and related schemes will observe that NMUs become permanently unspendable under The Cat and that balances associated with those UTXOs are no longer movable under the activated ruleset.
+
+---
+
+## Security Considerations
+
+### NMU_DATA integrity
+
+The NMU_DATA blob is critical to consensus. Nodes MUST verify that `SHA256d(NMU_DATA) == NMU_DATA_HASH` before enforcing any NMU rules. If a node loads corrupted or malicious NMU_DATA, it could either:
+
+- Incorrectly classify monetary UTXOs as NMUs (false positives not in FP_EXCLUDE), causing valid transactions to be rejected.
+- Fail to classify actual NMUs (if the filter is corrupted), allowing invalid spends.
+
+The NMU_DATA_HASH constant compiled into node software serves as the root of trust. Distribution of NMU_DATA through multiple independent channels (official releases, IPFS, BitTorrent, etc.) provides defense in depth.
+
+### False positive exclusion list completeness
+
+The FP_EXCLUDE list must be exhaustive at snapshot time. Any non-NMU UTXO that matches the filter but is missing from FP_EXCLUDE would be incorrectly classified as unspendable. The construction process MUST enumerate all UTXOs at H_snap and test each against the filter to ensure completeness.
+
+### Independent verification
+
+While ordinary node operation does not require running Ord or Stamps, the integrity of NMUSet_snap depends on the correctness of these indexers. Independent parties SHOULD verify the NMU set by:
+
+1. Running the pinned Ord and Stamps versions against their own full node
+2. Applying the value and height filters
+3. Confirming the resulting set matches NMU_DATA
+
+Multiple independent attestations of NMU_DATA_HASH increase confidence that the set was correctly derived.
+
+### Reorg safety
+
+The snapshot block commitment (§2.4) ensures that NMU enforcement is automatically disabled if the chain reorganizes past H_snap to a different block. This prevents consensus splits in deep reorg scenarios, at the cost of temporarily disabling The Cat protections until the original chain is restored.
 
 ---
 
