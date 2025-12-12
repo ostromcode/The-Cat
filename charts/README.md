@@ -40,7 +40,7 @@ this snapshot.
 This chart shows the *actual* distribution of inscription-bearing UTXOs by
 value bucket, on a log scale, with raw counts annotated.
 
-![Actual UTXO Count by Value](./chart_real_utxo_value.png)
+![Bar chart showing inscribed UTXO distribution by value bucket on log scale, with ~49M UTXOs under 1000 sats](./chart_real_utxo_value.png)
 
 ---
 
@@ -49,7 +49,7 @@ value bucket, on a log scale, with raw counts annotated.
 This chart emphasizes how many inscription-bearing UTXOs are dust-sized
 compared to the smaller population of large “whale” outputs.
 
-![Distribution of UTXO Values (Emphasis on Dust vs. Whales)](./utxo-value-histogram.png)
+![Histogram comparing dust UTXOs (under 1000 sats) to whale outputs, showing vast majority are dust-sized](./utxo-value-histogram.png)
 
 ---
 
@@ -58,7 +58,7 @@ compared to the smaller population of large “whale” outputs.
 This chart shows how many inscriptions were minted per block, highlighting the
 bursty, high-intensity periods of inscription activity across the Ordinals era.
 
-![Inscription Activity by Block Height](./chart_activity_pulse.png)
+![Line chart showing inscriptions per block over time, with spikes during high-activity periods in 2023-2024](./chart_activity_pulse.png)
 
 ---
 
@@ -68,7 +68,7 @@ Here we plot the cumulative number of unique UTXOs that contain inscriptions as
 a function of block height, making the rapid growth of the inscribed UTXO set
 visually clear.
 
-![Growth of the Inscribed UTXO Set Over Time](./utxo-count-over-time.png)
+![Cumulative line chart showing inscribed UTXO growth from near zero in early 2023 to over 50M by late 2024](./utxo-count-over-time.png)
 
 ---
 
@@ -78,7 +78,7 @@ This chart shows how many inscriptions are packed into each UTXO (1, 2–5, 6–
 …, 1k+), on a log scale. It highlights the existence of extremely dense carrier
 UTXOs, including ones with hundreds of thousands of inscriptions.
 
-![Inscription Density per UTXO](./inscriptions-per-utxo.png)
+![Log-scale bar chart showing inscription density per UTXO, from single inscriptions to dense carriers with 1000+ inscriptions](./inscriptions-per-utxo.png)
 
 ---
 
@@ -87,7 +87,7 @@ UTXOs, including ones with hundreds of thousands of inscriptions.
 This chart summarizes the estimated share of the global UTXO set’s disk usage
 consumed by dust-sized inscribed outputs versus all other UTXOs.
 
-![Global Bitcoin UTXO Set Size Impact](./global_bytes_impact.png)
+![Pie chart showing UTXO set disk usage: 38.7% (4.18 GB) from inscribed dust, 61.3% from other UTXOs](./global_bytes_impact.png)
 
 At the 926301 snapshot:
 
